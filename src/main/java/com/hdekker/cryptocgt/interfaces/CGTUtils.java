@@ -1,18 +1,21 @@
 package com.hdekker.cryptocgt.interfaces;
 
-import static com.hdekker.cryptocgt.interfaces.BalanceSnapshotUtils.sendRecieveToCoinOrderBalance;
-import static com.hdekker.cryptocgt.interfaces.BalanceSnapshotUtils.streamBalances;
-import static com.hdekker.cryptocgt.interfaces.BalanceSnapshotUtils.sumCoinOrderBalance;
+import static com.hdekker.cryptocgt.interfaces.BalanceAssesment.sendRecieveToCoinOrderBalance;
+import static com.hdekker.cryptocgt.interfaces.BalanceAssesment.streamBalances;
+import static com.hdekker.cryptocgt.interfaces.BalanceAssesment.sumCoinOrderBalance;
 import static com.hdekker.cryptocgt.interfaces.CGTUtils.convertToHashMapAndSortByKeyValue;
 import static com.hdekker.cryptocgt.interfaces.CGTUtils.getCoinBalancesForOrders;
-import static com.hdekker.cryptocgt.interfaces.AccountOrderUtils.*;
+import static com.hdekker.cryptocgt.interfaces.AccountOrdersAssesment.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -24,27 +27,40 @@ import com.hdekker.cryptocgt.data.AccountOrderSnapshot;
 import com.hdekker.cryptocgt.data.CGTEvent;
 import com.hdekker.cryptocgt.data.CoinOrderBalance;
 import com.hdekker.cryptocgt.data.Order;
-import com.hdekker.cryptocgt.data.SendRecieves;
+import com.hdekker.cryptocgt.imports.SendRecieves;
 
 public interface CGTUtils {
 
-	public static Function<List<CoinOrderBalance>, Map<String, List<CoinOrderBalance>>> convertToHashMapAndSortByKeyValue(Function<CoinOrderBalance, String> keySupplier){
-		return (list) -> {
+	public static 
+	Function<Function<CoinOrderBalance, String>,
+		Function<List<CoinOrderBalance>, Map<String, List<CoinOrderBalance>>>> convertToHashMapAndSortByKeyValue(){
+		return (keyMapper) ->  (list) -> {
 			
-			HashMap<String, List<CoinOrderBalance>> balanceMap = new HashMap<>();
-			
-			for(CoinOrderBalance cob: list){
+			// just want to accumulate like cob's
+			BinaryOperator<List<CoinOrderBalance>> merger = (a, b) -> {
 				
-				String key = keySupplier.apply(cob);
-				balanceMap.put(key, addBalanceToList()
-											.apply(Optional.ofNullable(balanceMap.get(key))
-														.orElse(new ArrayList<>())
-														,cob
-											)
-								);
-			}
+				List<CoinOrderBalance> nl = new ArrayList<>(a);
+				nl.addAll(b);
+				return nl;
+				
+			};
 			
-			return balanceMap;
+			return list.stream()
+				.collect(Collectors.toMap(keyMapper, cob -> Arrays.asList(cob), merger));
+			
+//			HashMap<String, List<CoinOrderBalance>> balanceMap = new HashMap<>();
+//			
+//			for(CoinOrderBalance cob: list){
+//				
+//				String key = keySupplier.apply(cob);
+//				balanceMap.put(key, addBalanceToList()
+//											.apply(Optional.ofNullable(balanceMap.get(key))
+//														.orElse(new ArrayList<>())
+//														,cob
+//											)
+//								);
+//			}
+			
 		};
 	}
 	
@@ -217,7 +233,7 @@ public interface CGTUtils {
 														.collect(Collectors.toList());
 				List<CoinOrderBalance> comb = new ArrayList<>(orders);
 				comb.addAll(sendReceives);
-				Map<String, List<CoinOrderBalance>> map = convertToHashMapAndSortByKeyValue(CoinOrderBalance::getCoinName).apply(comb);
+				Map<String, List<CoinOrderBalance>> map = convertToHashMapAndSortByKeyValue().apply(CoinOrderBalance::getCoinName).apply(comb);
 				map.keySet().forEach(key->map.get(key).sort((cob1, cob2) -> cob1.getBalanceDate().compareTo(cob2.getBalanceDate())));
 				return map;
 				
@@ -237,6 +253,21 @@ public interface CGTUtils {
 					.filter(cob1->cob.getBalanceDate().compareTo(cob1.getBalanceDate())>0)
 					.findFirst().orElseThrow();
 		};
+	}
+	
+	public static Function<List<CGTEvent>, Double> cgtSummer(){
+		return (list) -> list.stream()
+								.map(e->e.getCgt())
+								.reduce((a,n)-> a+n).orElse(0.0);
+	}
+	
+	public static Function<List<CGTEvent>, List<CGTEvent>> dateFilter(LocalDateTime after, LocalDateTime before){
+	
+		return (list) -> list.stream().filter(l->{
+			
+			return l.getDisposedDate().compareTo(after)>0 && l.getDisposedDate().compareTo(before)<0;
+		}).collect(Collectors.toList());
+			
 	}
 	
 }

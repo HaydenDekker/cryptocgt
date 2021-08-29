@@ -7,7 +7,7 @@ import com.hdekker.cryptocgt.TransactionType;
 import com.hdekker.cryptocgt.data.AccountOrderSnapshot;
 import com.hdekker.cryptocgt.data.CoinOrderBalance;
 import com.hdekker.cryptocgt.data.Order;
-import com.hdekker.cryptocgt.interfaces.CSVUtils.Converters;
+import com.hdekker.cryptocgt.imports.CSVUtils.Converters;
 
 /**
  * Interface to convert Order's to Account Order Snapshots
@@ -16,7 +16,7 @@ import com.hdekker.cryptocgt.interfaces.CSVUtils.Converters;
  * @author HDekker
  *
  */
-public interface AccountOrderUtils {
+public interface AccountOrdersAssesment {
 
 		// Order Maarshling functions 
 		// This set of functions converts the order's values

@@ -11,10 +11,10 @@ import com.hdekker.cryptocgt.data.AccountOrderSnapshot;
 import com.hdekker.cryptocgt.data.CoinBalance;
 import com.hdekker.cryptocgt.data.CoinOrderBalance;
 import com.hdekker.cryptocgt.data.Order;
-import com.hdekker.cryptocgt.data.SendRecieves;
-import com.hdekker.cryptocgt.interfaces.CSVUtils.Converters;
+import com.hdekker.cryptocgt.imports.SendRecieves;
+import com.hdekker.cryptocgt.imports.CSVUtils.Converters;
 
-public interface BalanceSnapshotUtils {
+public interface BalanceAssesment {
 
 	public static BiFunction<CoinBalance, CoinBalance, CoinBalance> sumCoinBalance(){
 		return (cb1, cb2) -> {
@@ -36,9 +36,13 @@ public interface BalanceSnapshotUtils {
 		};
 	}
 	
-	public static Function<String, Optional<Double>> reduceBalanceForCoin(List<CoinOrderBalance> allBalances){
+	// TODO filter to a map of cointype by balances first then
+	// reduce each
+	public static 
+		Function<List<CoinOrderBalance>, 
+				Function<String, Optional<Double>>> reduceBalanceForCoin(){
 		
-		return (coinName) -> {
+		return (allBalances) -> (coinName) -> {
 			return allBalances.stream().filter(s->s.getCoinName().equals(coinName))
 				.map(c->c.getCoinAmount())
 			.reduce((a,b)-> a+b);

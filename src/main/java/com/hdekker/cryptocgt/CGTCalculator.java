@@ -9,12 +9,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.hdekker.cryptocgt.cgtcalc.OrdersConfig;
-import com.hdekker.cryptocgt.cgtcalc.SendRecieveConfig;
 import com.hdekker.cryptocgt.data.AccountOrderSnapshot;
 import com.hdekker.cryptocgt.data.Order;
+import com.hdekker.cryptocgt.imports.OrdersConfig;
+import com.hdekker.cryptocgt.imports.SendRecieveConfig;
 
-import static com.hdekker.cryptocgt.interfaces.AccountOrderUtils.*;
+import static com.hdekker.cryptocgt.interfaces.AccountOrdersAssesment.*;
 
 public class CGTCalculator {
 
@@ -28,23 +28,24 @@ public class CGTCalculator {
 	
 	public CGTCalculator() {
 		
-		log.info("Preparing order history ... ");
-
-		List<Order> allOrders = ordersConfig.getOrders();
-		log.info("Extracted " + allOrders.size() + " of orders.");
-		
-		// create balance snapshots at each order.
-		List<Order> filteredByDate = allOrders.stream().sorted((a,b)-> {
-			return a.getTransactionDate().compareTo(b.getTransactionDate());
-		}).collect(Collectors.toList());
-		
-		log.info("The first order was on " + filteredByDate.get(0).getTransactionDate());
-		
-		// create snaps
-		List<AccountOrderSnapshot> aoss = filteredByDate.stream()
-											.map(order -> createOrderSnapshot().apply(order))
-											.collect(Collectors.toList());
-		
+		// TODO wahh
+		log.info("Preparing order history ... not started ");
+//
+//		List<Order> allOrders = ordersConfig.getOrders();
+//		log.info("Extracted " + allOrders.size() + " of orders.");
+//		
+//		// create balance snapshots at each order.
+//		List<Order> filteredByDate = allOrders.stream().sorted((a,b)-> {
+//			return a.getTransactionDate().compareTo(b.getTransactionDate());
+//		}).collect(Collectors.toList());
+//		
+//		log.info("The first order was on " + filteredByDate.get(0).getTransactionDate());
+//		
+//		// create snaps
+//		List<AccountOrderSnapshot> aoss = filteredByDate.stream()
+//											.map(order -> createOrderSnapshot().apply(order))
+//											.collect(Collectors.toList());
+//		
 		///List<CoinBalance> btcTrans = aoss.stream().filter(s->s)
 		
 		// - start with two lists, sends/received and orders.
