@@ -1,12 +1,9 @@
 package com.hdekker.cryptocgt.imports;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
@@ -20,23 +17,22 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.hdekker.cryptocgt.TransactionType;
+import com.hdekker.cryptocgt.data.TransactionType;
 
 import reactor.util.function.Tuple2;
 import reactor.util.function.Tuples;
 
-public interface CSVUtils {
+public class CSVUtils {
 	
 	// TODO application specific
-	final String coinSpotDateTimeFormat = "d/M/y k:m";
+	final static String coinSpotDateTimeFormat = "d/M/y k:m";
 	
-	static interface Converters {
+	public static class Converters {
 		
 		// Converters
 		public static Function<String, Double> doubleConverter = (string) -> Double.valueOf(string);
@@ -66,19 +62,19 @@ public interface CSVUtils {
 		
 		return (path)->{
 			
-			FileReader ordersCSV = null;
+			FileReader document = null;
 			
 			try {
-				ordersCSV = new FileReader(new File(path));
+				document = new FileReader(new File(path));
 				
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 			
-			if(ordersCSV == null) return Optional.empty();
+			if(document == null) return Optional.empty();
 			
-			return Optional.of(new BufferedReader(ordersCSV));
+			return Optional.of(new BufferedReader(document));
 			
 		};
 		
@@ -89,7 +85,7 @@ public interface CSVUtils {
 	 *  Headings may have quotes "" so remove.
 	 * 
 	 */
-	Function<String, String> cleanCSVValues = (s) -> s.stripLeading().replaceAll("^\"|\"$", "");
+	static Function<String, String> cleanCSVValues = (s) -> s.stripLeading().replaceAll("^\"|\"$", "");
 
 	/**
 	 * Must be called first after the Buffered reader is returned.

@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConfigurationProperties(prefix = "cryptocgt.config")
-public class UserConfig {
+public class AppConfig {
 
 	String buysSellsCSV;
 	String sendsReceivesCSV;

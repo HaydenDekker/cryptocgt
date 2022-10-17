@@ -6,12 +6,12 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import com.hdekker.cryptocgt.TransactionType;
 import com.hdekker.cryptocgt.data.AccountOrderSnapshot;
 import com.hdekker.cryptocgt.data.CoinBalance;
 import com.hdekker.cryptocgt.data.CoinOrderBalance;
-import com.hdekker.cryptocgt.data.Order;
-import com.hdekker.cryptocgt.imports.SendRecieves;
+import com.hdekker.cryptocgt.data.TransactionType;
+import com.hdekker.cryptocgt.data.transaction.Order;
+import com.hdekker.cryptocgt.data.transaction.SendRecieves;
 import com.hdekker.cryptocgt.imports.CSVUtils.Converters;
 
 public interface BalanceAssesment {

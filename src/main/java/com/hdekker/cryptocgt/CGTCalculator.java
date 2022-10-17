@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hdekker.cryptocgt.data.AccountOrderSnapshot;
-import com.hdekker.cryptocgt.data.Order;
-import com.hdekker.cryptocgt.imports.OrdersConfig;
+import com.hdekker.cryptocgt.data.transaction.Order;
+import com.hdekker.cryptocgt.imports.OrdersCSVExtractor;
 import com.hdekker.cryptocgt.imports.SendRecieveConfig;
 
 import static com.hdekker.cryptocgt.interfaces.AccountOrdersAssesment.*;
@@ -24,7 +24,7 @@ public class CGTCalculator {
 	SendRecieveConfig sendRecieveConfig;
 	
 	@Autowired
-	OrdersConfig ordersConfig;
+	OrdersCSVExtractor ordersConfig;
 	
 	public CGTCalculator() {
 		

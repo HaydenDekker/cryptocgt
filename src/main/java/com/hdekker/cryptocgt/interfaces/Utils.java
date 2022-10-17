@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.hdekker.cryptocgt.data.AccountBalanceSnapshot;
 import com.hdekker.cryptocgt.data.CoinBalance;
-import com.hdekker.cryptocgt.data.Order;
+import com.hdekker.cryptocgt.data.transaction.Order;
 
 
 public interface Utils {

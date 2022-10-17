@@ -1,24 +1,22 @@
 package com.hdekker.cryptocgt;
 
-import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.OrderComparator.OrderSourceProvider;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.hdekker.cryptocgt.data.CGTEvent;
 import com.hdekker.cryptocgt.data.CoinOrderBalance;
-import com.hdekker.cryptocgt.data.Order;
+import com.hdekker.cryptocgt.data.TransactionType;
+import com.hdekker.cryptocgt.data.transaction.Order;
+import com.hdekker.cryptocgt.data.transaction.SendRecieves;
 import com.hdekker.cryptocgt.imports.CSVUtils;
-import com.hdekker.cryptocgt.imports.OrdersConfig;
+import com.hdekker.cryptocgt.imports.OrdersCSVExtractor;
 import com.hdekker.cryptocgt.imports.SendRecieveConfig;
-import com.hdekker.cryptocgt.imports.SendRecieves;
-import com.hdekker.cryptocgt.interfaces.BalanceAssesment;
 import com.hdekker.cryptocgt.interfaces.CGTUtils;
 
 import reactor.util.function.Tuple2;
@@ -35,17 +33,11 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @SpringBootTest
 public class CGTEventTest {
@@ -119,7 +111,7 @@ public class CGTEventTest {
 	}
 	
 	@Autowired
-	UserConfig userConfig;
+	AppConfig userConfig;
 	
 	
 	/**
@@ -210,7 +202,7 @@ public class CGTEventTest {
 		Tuple2<BufferedReader, List<String>> orderInput = CSVUtils.openDocumentAndGetHeadings
 				.apply(userConfig.getBuysSellsCSV());
 		
-		Function<Tuple2<BufferedReader, List<String>>, List<Order>> orderfn = OrdersConfig.getOrders();
+		Function<Tuple2<BufferedReader, List<String>>, List<Order>> orderfn = OrdersCSVExtractor.getOrders();
 		
 		// sends recieves
 		Tuple2<BufferedReader, List<String>> srinput = CSVUtils.openDocumentAndGetHeadings

@@ -18,8 +18,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.hdekker.cryptocgt.data.AccountOrderSnapshot;
 import com.hdekker.cryptocgt.data.CoinBalance;
 import com.hdekker.cryptocgt.data.CoinOrderBalance;
-import com.hdekker.cryptocgt.data.Order;
-import com.hdekker.cryptocgt.imports.SendRecieves;
+import com.hdekker.cryptocgt.data.TransactionType;
+import com.hdekker.cryptocgt.data.transaction.Order;
+import com.hdekker.cryptocgt.data.transaction.SendRecieves;
 import com.hdekker.cryptocgt.interfaces.AccountOrdersAssesment;
 import com.hdekker.cryptocgt.interfaces.BalanceAssesment;
 

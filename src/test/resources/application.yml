@@ -1,0 +1,5 @@
+cryptocgt:
+  config: 
+    buysSellsCSV: src/test/resources/orderhistory-test.csv
+    sendsReceivesCSV: src/test/resources/sendsreceives-test.csv
+    reportLocation: src/test/resources/cgt-crypto-test.csv

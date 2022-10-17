@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.hdekker.cryptocgt.UserConfig;
+import com.hdekker.cryptocgt.AppConfig;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -13,7 +13,7 @@ import static org.hamcrest.Matchers.*;
 public class UserConfigTest {
 
 	@Autowired
-	UserConfig userConfig;
+	AppConfig userConfig;
 	
 	/**
 	 *  Should fail for if you change the app config

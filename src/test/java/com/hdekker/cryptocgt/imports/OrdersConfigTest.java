@@ -1,47 +1,61 @@
 package com.hdekker.cryptocgt.imports;
 
 import java.io.BufferedReader;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.function.Function;
-
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.hdekker.cryptocgt.UserConfig;
-import com.hdekker.cryptocgt.data.Order;
+import com.hdekker.cryptocgt.AppConfig;
+import com.hdekker.cryptocgt.data.TransactionType;
+import com.hdekker.cryptocgt.data.transaction.Order;
 
-import reactor.util.function.Tuple2;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 @SpringBootTest
 public class OrdersConfigTest {
 
+	Logger log = LoggerFactory.getLogger(OrdersConfigTest.class);
+	
 	@Autowired
-	UserConfig userConfig;
+	OrdersCSVExtractor ordersExtractor;
+	
+	@Autowired
+	AppConfig appConfig;
 	
 	@Test
-	public void hasRequiredHeadings() {
-		// TODO implement
-	}
-	
-	/**
-	 *  Need to change values here to 
-	 *  ones specific to your configured report
-	 * 
-	 */
-	@Test
-	public void itImportsOrders() {
+	public void importsOrders() throws Exception {
 		
-		Tuple2<BufferedReader, List<String>> input = CSVUtils.openDocumentAndGetHeadings
-				.apply(userConfig.getBuysSellsCSV());
+		log.info("The test csv file url is " + appConfig.getBuysSellsCSV());
 		
-		Function<Tuple2<BufferedReader, List<String>>, List<Order>> fn = OrdersConfig.getOrders();
+		BufferedReader reader = CSVUtils.openDocumentReader()
+			.apply(appConfig.getBuysSellsCSV())
+			.get();
 		
-		List<Order> out = fn.apply(input);
+		List<Order> orders = ordersExtractor.getOrders(reader);	
+				
 		
-		assertThat(out.size(), equalTo(963));
+		assertThat(orders.size(), equalTo(1));
+		
+		Order order = orders.get(0);
+		assertThat(
+				// 24/08/2021  10:46:00 AM
+				order.getTransactionDate(), 
+				equalTo(LocalDateTime.of(2021, 8, 24, 10, 46)));
+		assertThat(order.getTransactionType(), equalTo(TransactionType.Sell));
+		assertThat(order.getAmount(), equalTo(0.19952114));
+		assertThat(order.getMarket(), equalTo("UNI/AUD"));
+		assertThat(order.getRateIncFee(), equalTo(39.2));
+		assertThat(order.getRateExFee(), equalTo(39.5959596));
+		assertThat(order.getFee(), equalTo("0.07900231 AUD"));
+		assertThat(order.getFeeIncGST(), equalTo(0.08));
+		assertThat(order.getGst(), equalTo(0.01));
+		assertThat(order.getTotalAUD(), equalTo(7.82));
+		assertThat(order.getTotalIncGST(), equalTo("7.82122869 AUD"));
 		
 	}
 	

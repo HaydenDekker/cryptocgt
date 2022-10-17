@@ -9,7 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.hdekker.cryptocgt.data.AccountOrderSnapshot;
-import com.hdekker.cryptocgt.data.Order;
+import com.hdekker.cryptocgt.data.TransactionType;
+import com.hdekker.cryptocgt.data.transaction.Order;
 import com.hdekker.cryptocgt.interfaces.AccountOrdersAssesment;
 
 @SpringBootTest

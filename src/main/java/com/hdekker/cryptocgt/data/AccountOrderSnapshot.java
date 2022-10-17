@@ -2,8 +2,6 @@ package com.hdekker.cryptocgt.data;
 
 import java.time.LocalDateTime;
 
-import com.hdekker.cryptocgt.TransactionType;
-
 /**
  * @author HDekker
  *

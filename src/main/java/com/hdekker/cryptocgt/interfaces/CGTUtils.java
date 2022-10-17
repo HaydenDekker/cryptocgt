@@ -26,8 +26,8 @@ import org.slf4j.LoggerFactory;
 import com.hdekker.cryptocgt.data.AccountOrderSnapshot;
 import com.hdekker.cryptocgt.data.CGTEvent;
 import com.hdekker.cryptocgt.data.CoinOrderBalance;
-import com.hdekker.cryptocgt.data.Order;
-import com.hdekker.cryptocgt.imports.SendRecieves;
+import com.hdekker.cryptocgt.data.transaction.Order;
+import com.hdekker.cryptocgt.data.transaction.SendRecieves;
 
 public interface CGTUtils {
 

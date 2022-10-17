@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.hdekker.cryptocgt.UserConfig;
+import com.hdekker.cryptocgt.AppConfig;
 
 import reactor.util.function.Tuple2;
 
@@ -26,7 +26,7 @@ import static org.hamcrest.Matchers.*;
 public class CSVUtilsTest {
 
 	@Autowired
-	UserConfig userConfig;
+	AppConfig userConfig;
 	
 	/**
 	 *  Development Only - can access and open document
