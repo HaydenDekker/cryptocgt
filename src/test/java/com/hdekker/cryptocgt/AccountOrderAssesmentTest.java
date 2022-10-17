@@ -18,13 +18,14 @@ public class AccountOrderAssesmentTest {
 
 	Order testOrder1() {
 		
-		Order o = new Order();
-		o.setTransactionDate(LocalDateTime.of(2017, 5, 21, 16, 51));
-		o.setTransactionType(TransactionType.Sell);
-		o.setMarket("BTC/ETH");
-		o.setAmount(0.01);
-		o.setTotalAUD(28.31);
-		o.setTotalIncGST("0.16363634 ETH");
+		Order o = new Order(
+			LocalDateTime.of(2017, 5, 21, 16, 51),
+			TransactionType.Sell,
+			"BTC/ETH",
+			0.01,
+			28.31,
+			"0.16363634 ETH"
+			);
 		
 		return o;
 		
@@ -32,13 +33,14 @@ public class AccountOrderAssesmentTest {
 	
 	Order testOrder2() {
 		
-		Order o = new Order();
-		o.setTransactionDate(LocalDateTime.of(2017, 12, 10, 20, 27));
-		o.setTransactionType(TransactionType.Buy);
-		o.setMarket("BTC/AUD");
-		o.setAmount(0.0046118);
-		o.setTotalAUD(95.00);
-		o.setTotalIncGST("95.00 AUD");
+		Order o = new Order(
+				LocalDateTime.of(2017, 12, 10, 20, 27),
+				TransactionType.Buy,
+				"BTC/AUD",
+				0.0046118,
+				95.00,
+				"95.00 AUD"
+				);
 		
 		return o;
 		

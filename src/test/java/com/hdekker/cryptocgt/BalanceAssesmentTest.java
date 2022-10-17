@@ -12,7 +12,6 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.hdekker.cryptocgt.data.AccountOrderSnapshot;
@@ -26,8 +25,6 @@ import com.hdekker.cryptocgt.interfaces.BalanceAssesment;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 
 @SpringBootTest
 public class BalanceAssesmentTest {
@@ -41,13 +38,13 @@ public class BalanceAssesmentTest {
 
 	Order testOrder1() {
 		
-		Order o = new Order();
-		o.setTransactionDate(LocalDateTime.of(2017, 5, 21, 16, 51));
-		o.setTransactionType(TransactionType.Sell);
-		o.setMarket("BTC/ETH");
-		o.setAmount(0.01);
-		o.setTotalAUD(28.31);
-		o.setTotalIncGST("0.16363634 ETH");
+		Order o = new Order(
+				LocalDateTime.of(2017, 5, 21, 16, 51),
+				TransactionType.Sell,
+				"BTC/ETH",
+				0.01,
+				28.31,
+				"0.16363634 ETH");
 		
 		return o;
 		
@@ -57,13 +54,13 @@ public class BalanceAssesmentTest {
 	
 	Order testOrder2() {
 		
-		Order o = new Order();
-		o.setTransactionDate(LocalDateTime.of(2019, 1, 3, 12, 35));
-		o.setTransactionType(TransactionType.Sell);
-		o.setMarket("BTC/ETH");
-		o.setAmount(0.01);
-		o.setTotalAUD(54.66);
-		o.setTotalIncGST("0.24776300 ETH");
+		Order o = new Order(LocalDateTime.of(2019, 1, 3, 12, 35),
+				TransactionType.Sell,
+				"BTC/ETH",
+				0.01,
+				54.66,
+				"0.24776300 ETH"
+				);
 		
 		return o;
 		
@@ -97,13 +94,14 @@ public class BalanceAssesmentTest {
 	// 13/6/2017 17:22	Sell	BTC/ETH	0.014	7.07041801	7.07041801	0.00000000 ETH	0	0	52.37	0.09898585 ETH
 	Order testOrder3() {
 		
-		Order o = new Order();
-		o.setTransactionDate(LocalDateTime.of(2017, 6, 13, 17, 22));
-		o.setTransactionType(TransactionType.Sell);
-		o.setMarket("BTC/ETH");
-		o.setAmount(0.014);
-		o.setTotalAUD(52.37);
-		o.setTotalIncGST("0.09898585 ETH");
+		Order o = new Order(
+				LocalDateTime.of(2017, 6, 13, 17, 22),
+				TransactionType.Sell,
+				"BTC/ETH",
+				0.014,
+				52.37,
+				"0.09898585 ETH"
+				);
 		
 		return o;
 		

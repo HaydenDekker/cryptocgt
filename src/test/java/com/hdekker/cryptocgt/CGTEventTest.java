@@ -46,13 +46,14 @@ public class CGTEventTest {
 	
 	Order buildOrder(String date, TransactionType type, String market, String amount, String totalAUD, String totalIncGST) {
 		
-		Order o = new Order();
-		o.setTransactionDate(Converters.dateTimeConverter.apply(date));
-		o.setTransactionType(type);
-		o.setMarket(market);
-		o.setAmount(Converters.doubleConverter.apply(amount));
-		o.setTotalAUD(Converters.doubleConverter.apply(totalAUD));
-		o.setTotalIncGST(totalIncGST);
+		Order o = new Order(
+				Converters.dateTimeConverter.apply(date),
+				type,
+				market,
+				Double.valueOf(amount),
+				Double.valueOf(totalAUD),
+				totalIncGST
+				);
 		
 		return o;
 		

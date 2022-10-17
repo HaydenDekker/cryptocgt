@@ -209,7 +209,7 @@ public interface CGTUtils {
 		
 	}
 	
-	public static Function<List<CoinOrderBalance>, List<CGTEvent>> getCGTSForDisposals(Function<CoinOrderBalance, Stream<CGTEvent>> cgtGetter){
+	private static Function<List<CoinOrderBalance>, List<CGTEvent>> getCGTSForDisposals(Function<CoinOrderBalance, Stream<CGTEvent>> cgtGetter){
 		return (disposals) ->{
 			
 			return disposals.stream()
@@ -243,7 +243,7 @@ public interface CGTUtils {
 		
 	
 
-	public static BiFunction<CoinOrderBalance, List<CoinOrderBalance>, CoinOrderBalance> findTheMostRecentPurchase(){
+	static BiFunction<CoinOrderBalance, List<CoinOrderBalance>, CoinOrderBalance> findTheMostRecentPurchase(){
 		return (cob, list) -> {
 			
 			// reverse order. I'm sure this would be horrible for long lists.
@@ -255,12 +255,14 @@ public interface CGTUtils {
 		};
 	}
 	
+	// TODO only used in reporting of final CGT per year.
 	public static Function<List<CGTEvent>, Double> cgtSummer(){
 		return (list) -> list.stream()
 								.map(e->e.getCgt())
 								.reduce((a,n)-> a+n).orElse(0.0);
 	}
 	
+	// TODO only used in reporting of final CGT per year.
 	public static Function<List<CGTEvent>, List<CGTEvent>> dateFilter(LocalDateTime after, LocalDateTime before){
 	
 		return (list) -> list.stream().filter(l->{

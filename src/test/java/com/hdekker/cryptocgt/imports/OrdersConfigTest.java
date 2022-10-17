@@ -49,11 +49,6 @@ public class OrdersConfigTest {
 		assertThat(order.getTransactionType(), equalTo(TransactionType.Sell));
 		assertThat(order.getAmount(), equalTo(0.19952114));
 		assertThat(order.getMarket(), equalTo("UNI/AUD"));
-		assertThat(order.getRateIncFee(), equalTo(39.2));
-		assertThat(order.getRateExFee(), equalTo(39.5959596));
-		assertThat(order.getFee(), equalTo("0.07900231 AUD"));
-		assertThat(order.getFeeIncGST(), equalTo(0.08));
-		assertThat(order.getGst(), equalTo(0.01));
 		assertThat(order.getTotalAUD(), equalTo(7.82));
 		assertThat(order.getTotalIncGST(), equalTo("7.82122869 AUD"));
 		

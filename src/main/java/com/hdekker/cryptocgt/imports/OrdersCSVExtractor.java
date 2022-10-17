@@ -47,11 +47,6 @@ public class OrdersCSVExtractor {
 								TransactionType.valueOf(rec.get(OrderColumns.Type)),
 								rec.get(OrderColumns.Market),
 								Double.valueOf(rec.get(OrderColumns.Amount)),
-								Double.valueOf(rec.get(OrderColumns.Rateincfee)), 
-								Double.valueOf(rec.get(OrderColumns.Rateexfee)), 
-								rec.get(OrderColumns.Fee), 
-								Double.valueOf(rec.get(OrderColumns.FeeAUDincGST)), 
-								Double.valueOf(rec.get(OrderColumns.GSTAUD)), 
 								Double.valueOf(rec.get(OrderColumns.TotalAUD)), 
 								rec.get(OrderColumns.TotalincGST));
 						
@@ -63,28 +58,5 @@ public class OrdersCSVExtractor {
 				throw new Exception("Couldn't import orders.", e);
 			}
 					
-			
-		
-
-		//parser = format.parse(null)
-		
-//			HashMap<String, BiFunction<Order, String,  Order>> objectSetters = new HashMap<>();
-//			objectSetters.put(Amount, configureColumn(Converters.doubleConverter, Order::setAmount, Order.class));
-//			objectSetters.put(Fee, configureColumn(Converters.stringConverter, Order::setFee, Order.class));
-//			objectSetters.put(FeeAUDincGST, configureColumn(Converters.doubleConverter, Order::setFeeIncGST, Order.class));
-//			objectSetters.put(GSTAUD, configureColumn(Converters.doubleConverter, Order::setGst, Order.class));
-//			objectSetters.put(Market, configureColumn(Converters.stringConverter, Order::setMarket, Order.class));
-//			objectSetters.put(Rateexfee, configureColumn(Converters.doubleConverter, Order::setRateExFee, Order.class));
-//			objectSetters.put(Rateincfee, configureColumn(Converters.doubleConverter, Order::setRateIncFee, Order.class));
-//			objectSetters.put(TotalAUD, configureColumn(Converters.doubleConverter, Order::setTotalAUD, Order.class));
-//			objectSetters.put(TotalincGST, configureColumn(Converters.stringConverter, Order::setTotalIncGST, Order.class));
-//			objectSetters.put(TransactionDate, configureColumn(Converters.dateTimeConverter, Order::setTransactionDate, Order.class));
-//			objectSetters.put(Type, configureColumn(Converters.transactionTypeConv, Order::setTransactionType, Order.class));
-//		
-//			List<Order> allOrders = getObjectCreator(objectSetters, Order.class)
-//												.apply(tupe2.getT1(), tupe2.getT2());
-//		
-//			return allOrders;
-		
 	}
 }

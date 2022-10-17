@@ -10,7 +10,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 @SpringBootTest
-public class UserConfigTest {
+public class AppConfigTest {
 
 	@Autowired
 	AppConfig userConfig;

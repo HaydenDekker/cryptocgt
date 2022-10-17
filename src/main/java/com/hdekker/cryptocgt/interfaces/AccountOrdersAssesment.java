@@ -7,7 +7,6 @@ import com.hdekker.cryptocgt.data.AccountOrderSnapshot;
 import com.hdekker.cryptocgt.data.CoinOrderBalance;
 import com.hdekker.cryptocgt.data.TransactionType;
 import com.hdekker.cryptocgt.data.transaction.Order;
-import com.hdekker.cryptocgt.imports.CSVUtils.Converters;
 
 /**
  * Interface to convert Order's to Account Order Snapshots
@@ -26,7 +25,7 @@ public interface AccountOrdersAssesment {
 		}
 		
 		public static Function<String, Double> splitTargetAmount(){
-			return (s)-> Converters.doubleConverter.apply(s.split(" ")[0]);
+			return (s)-> Double.valueOf(s.split(" ")[0]);
 		}
 		
 		public static Function<Order, Double> calcPrimaryExchangeRateAUD(){

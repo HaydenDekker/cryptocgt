@@ -1,6 +1,5 @@
 package com.hdekker.cryptocgt.data.transaction;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.hdekker.cryptocgt.data.TransactionType;
@@ -20,27 +19,21 @@ public class Order {
 	final TransactionType transactionType;
 	final String market;
 	final Double amount;
-	final Double rateIncFee;
-	final Double rateExFee;
-	final String fee;
-	final Double feeIncGST;
-	final Double gst;
 	final Double totalAUD;
 	final String totalIncGST;
 	
-	public Order(LocalDateTime transactionDate, TransactionType transactionType, String market, Double amount,
-			Double rateIncFee, Double rateExFee, String fee, Double feeIncGST, Double gst, Double totalAUD,
+	public Order(
+			LocalDateTime transactionDate, 
+			TransactionType transactionType, 
+			String market, 
+			Double amount,
+			Double totalAUD,
 			String totalIncGST) {
 		super();
 		this.transactionDate = transactionDate;
 		this.transactionType = transactionType;
 		this.market = market;
 		this.amount = amount;
-		this.rateIncFee = rateIncFee;
-		this.rateExFee = rateExFee;
-		this.fee = fee;
-		this.feeIncGST = feeIncGST;
-		this.gst = gst;
 		this.totalAUD = totalAUD;
 		this.totalIncGST = totalIncGST;
 	}
@@ -56,23 +49,8 @@ public class Order {
 	public Double getAmount() {
 		return amount;
 	}
-	public Double getRateIncFee() {
-		return rateIncFee;
-	}
-	public Double getRateExFee() {
-		return rateExFee;
-	}
-	public Double getFeeIncGST() {
-		return feeIncGST;
-	}
-	public Double getGst() {
-		return gst;
-	}
 	public Double getTotalAUD() {
 		return totalAUD;
-	}
-	public String getFee() {
-		return fee;
 	}
 	public String getTotalIncGST() {
 		return totalIncGST;

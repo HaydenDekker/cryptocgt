@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -24,8 +23,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.hdekker.cryptocgt.data.TransactionType;
 
-import reactor.util.function.Tuple2;
-import reactor.util.function.Tuples;
 
 public class CSVUtils {
 	
@@ -33,9 +30,7 @@ public class CSVUtils {
 	final static String coinSpotDateTimeFormat = "d/M/y k:m";
 	
 	public static class Converters {
-		
-		// Converters
-		public static Function<String, Double> doubleConverter = (string) -> Double.valueOf(string);
+
 		public static Function<String, String> stringConverter = (string) -> string;
 		
 		public static Function<String, LocalDateTime> dateTimeConverter = (string) -> 
@@ -87,32 +82,6 @@ public class CSVUtils {
 	 */
 	static Function<String, String> cleanCSVValues = (s) -> s.stripLeading().replaceAll("^\"|\"$", "");
 
-	/**
-	 * Must be called first after the Buffered reader is returned.
-	 * 
-	 * 
-	 * @return
-	 */
-	public static Function<BufferedReader, List<String>> getColumnHeadings(){
-		return (br) -> {
-			
-			List<String> columnOrder = null;
-			
-			try {
-				columnOrder = Arrays.asList(br.readLine().split(","))
-									.stream()
-									.map(cleanCSVValues)
-									.collect(Collectors.toList());
-				
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			return columnOrder;
-		};
-	}
-
 	
 	/**
 	 *  Check for required headings.
@@ -122,15 +91,7 @@ public class CSVUtils {
 	public BiPredicate<List<String>, List<String>> hasRequiredHeadings = (requiredHeadings, actualHeadings) -> {
 		return actualHeadings.containsAll(requiredHeadings);
 	};
-	/**
-	 *  App level function if reading from file.
-	 * 
-	 */
-	public Function<String, Tuple2<BufferedReader, List<String>>> openDocumentAndGetHeadings
-			= (doc) -> {
-				BufferedReader reader = openDocumentReader().apply(doc).orElseThrow();
-				return Tuples.of(reader, getColumnHeadings().apply(reader));
-	};
+
 
 	/**
 	 * Use this to convert csv's to objects of you choosing
