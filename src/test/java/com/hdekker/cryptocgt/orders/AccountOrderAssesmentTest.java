@@ -1,17 +1,16 @@
-package com.hdekker.cryptocgt;
+package com.hdekker.cryptocgt.orders;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDateTime;
-import java.util.function.BiFunction;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.hdekker.cryptocgt.data.AccountOrderSnapshot;
-import com.hdekker.cryptocgt.data.TransactionType;
 import com.hdekker.cryptocgt.data.transaction.Order;
-import com.hdekker.cryptocgt.interfaces.AccountOrdersAssesment;
+import com.hdekker.cryptocgt.data.transaction.TransactionType;
 
 @SpringBootTest
 public class AccountOrderAssesmentTest {
@@ -49,9 +48,9 @@ public class AccountOrderAssesmentTest {
 	@Test
 	public void getPrimaryOrSecondaryCoinNameTest() {
 		String btcaud = "BTC/AUD";
-		BiFunction<String, Boolean, String> fn = AccountOrdersAssesment.getPrimaryOrSecondaryCoinName();
-		assertTrue(fn.apply(btcaud, true).equals("BTC"));
-		assertTrue(fn.apply(btcaud, false).equals("AUD"));
+		List<String> list = AccountOrdersAssesment.splitMarketString(btcaud);
+		assertTrue(list.get(0).equals("BTC"));
+		assertTrue(list.get(1).equals("AUD"));
 	}
 	
 	@Test

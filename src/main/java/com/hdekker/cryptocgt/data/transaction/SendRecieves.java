@@ -2,8 +2,6 @@ package com.hdekker.cryptocgt.data.transaction;
 
 import java.time.LocalDateTime;
 
-import com.hdekker.cryptocgt.data.TransactionType;
-
 public class SendRecieves {
 
 	final String coin;

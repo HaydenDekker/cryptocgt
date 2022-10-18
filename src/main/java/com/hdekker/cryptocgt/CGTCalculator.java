@@ -1,6 +1,8 @@
 package com.hdekker.cryptocgt;
 
 
+import static com.hdekker.cryptocgt.orders.AccountOrdersAssesment.*;
+
 import java.util.List;
 
 import java.util.stream.Collectors;
@@ -13,8 +15,6 @@ import com.hdekker.cryptocgt.data.AccountOrderSnapshot;
 import com.hdekker.cryptocgt.data.transaction.Order;
 import com.hdekker.cryptocgt.imports.OrdersCSVExtractor;
 import com.hdekker.cryptocgt.imports.SendRecieveConfig;
-
-import static com.hdekker.cryptocgt.interfaces.AccountOrdersAssesment.*;
 
 public class CGTCalculator {
 

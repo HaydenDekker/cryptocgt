@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.hdekker.cryptocgt.AppConfig;
-import com.hdekker.cryptocgt.data.TransactionType;
 import com.hdekker.cryptocgt.data.transaction.Order;
+import com.hdekker.cryptocgt.data.transaction.TransactionType;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;

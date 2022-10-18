@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.hdekker.cryptocgt.AppConfig;
-import com.hdekker.cryptocgt.data.TransactionType;
 import com.hdekker.cryptocgt.data.transaction.SendRecieves;
+import com.hdekker.cryptocgt.data.transaction.TransactionType;
 import com.hdekker.cryptocgt.imports.SendRecieveConfig;
 
 import reactor.util.function.Tuple2;

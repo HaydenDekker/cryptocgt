@@ -1,19 +1,15 @@
 package com.hdekker.cryptocgt.interfaces;
 
-import static com.hdekker.cryptocgt.interfaces.BalanceAssesment.sendRecieveToCoinOrderBalance;
-import static com.hdekker.cryptocgt.interfaces.BalanceAssesment.streamBalances;
-import static com.hdekker.cryptocgt.interfaces.BalanceAssesment.sumCoinOrderBalance;
-import static com.hdekker.cryptocgt.interfaces.CGTUtils.convertToHashMapAndSortByKeyValue;
-import static com.hdekker.cryptocgt.interfaces.CGTUtils.getCoinBalancesForOrders;
-import static com.hdekker.cryptocgt.interfaces.AccountOrdersAssesment.*;
+import static com.hdekker.cryptocgt.orders.AccountOrdersAssesment.*;
+import static com.hdekker.cryptocgt.balance.BalanceAssesment.sendRecieveToCoinOrderBalance;
+import static com.hdekker.cryptocgt.balance.BalanceAssesment.streamBalances;
+import static com.hdekker.cryptocgt.balance.BalanceAssesment.sumCoinOrderBalance;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
@@ -128,15 +124,16 @@ public interface CGTUtils {
 		
 		return (cobCurrent, cobPast)-> {
 			
-			CGTEvent e = new CGTEvent();
-			e.setCoinName(cobCurrent.getCoinName());
-			e.setDisposedDate(cobCurrent.getBalanceDate());
-			e.setPurchasedDate(cobPast.getBalanceDate());
 			
 			Double purchaseCost = Math.abs(cobCurrent.getCoinAmount())*cobPast.getExchangeRateAUD();
 			Double sellPrice = Math.abs(cobCurrent.getCoinAmount())*cobCurrent.getExchangeRateAUD();
 			
-			e.setCgt(sellPrice-purchaseCost);
+			CGTEvent e = new CGTEvent(
+					cobCurrent.getBalanceDate(),
+					cobPast.getBalanceDate(),
+					sellPrice-purchaseCost,
+					cobCurrent.getCoinName()
+					);
 			
 			return e;
 			
@@ -184,11 +181,14 @@ public interface CGTUtils {
 				stream = Stream.concat(stream, Stream.of(createCGTEvent().apply(disposal, mostRecent)));
 				
 				// value of difference needs to be considered relative to current disposal
-				newBalanceAtMostRecent.setBalanceDate(disposal.getBalanceDate());
+				CoinOrderBalance balance = new CoinOrderBalance(
+						newBalanceAtMostRecent.getCoinName(), 
+						newBalanceAtMostRecent.getCoinAmount(),
+						newBalanceAtMostRecent.getExchangeRateAUD(),
+						disposal.getBalanceDate());
 				
 				// return the stream.
-				
-				stream = Stream.concat(stream, createCGTEventsForDisposal(balanceList).apply(newBalanceAtMostRecent));
+				stream = Stream.concat(stream, createCGTEventsForDisposal(balanceList).apply(balance));
 				
 				
 			} else {

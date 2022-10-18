@@ -1,4 +1,4 @@
-package com.hdekker.cryptocgt.interfaces;
+package com.hdekker.cryptocgt.balance;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,18 +9,20 @@ import java.util.stream.Stream;
 import com.hdekker.cryptocgt.data.AccountOrderSnapshot;
 import com.hdekker.cryptocgt.data.CoinBalance;
 import com.hdekker.cryptocgt.data.CoinOrderBalance;
-import com.hdekker.cryptocgt.data.TransactionType;
-import com.hdekker.cryptocgt.data.transaction.Order;
 import com.hdekker.cryptocgt.data.transaction.SendRecieves;
-import com.hdekker.cryptocgt.imports.CSVUtils.Converters;
 
-public interface BalanceAssesment {
+public class BalanceAssesment {
 
 	public static BiFunction<CoinBalance, CoinBalance, CoinBalance> sumCoinBalance(){
 		return (cb1, cb2) -> {
 			
-			CoinBalance cb = Utils.coinBalanceDeepCopy().apply(cb2);
-			cb.setCoinAmount(cb2.getCoinAmount() + cb1.getCoinAmount());
+			double summedBalance = cb2.getCoinAmount() + cb1.getCoinAmount();
+			
+			CoinBalance cb = new CoinBalance(
+					cb2.getCoinName(), 
+					summedBalance
+			);
+
 			return cb;
 			
 		};
@@ -29,8 +31,15 @@ public interface BalanceAssesment {
 	public static BiFunction<CoinOrderBalance, CoinOrderBalance, CoinOrderBalance> sumCoinOrderBalance(){
 		return (cb1Earliest, cb2) -> {
 			
-			CoinOrderBalance cb = Utils.deepCopier(CoinOrderBalance.class).apply(cb1Earliest);
-			cb.setCoinAmount(cb2.getCoinAmount() + cb1Earliest.getCoinAmount());
+			double sum = cb2.getCoinAmount() + cb1Earliest.getCoinAmount();
+			
+			CoinOrderBalance cb = new CoinOrderBalance(
+					cb1Earliest.getCoinName(), 
+					sum, 
+					cb1Earliest.getExchangeRateAUD(),
+					cb1Earliest.getBalanceDate()
+					);
+			
 			return cb;
 			
 		};
@@ -57,12 +66,13 @@ public interface BalanceAssesment {
 	public static Function<SendRecieves, CoinOrderBalance> sendRecieveToCoinOrderBalance(){
 		return (sr) -> {
 			
-			CoinOrderBalance cob = new CoinOrderBalance();
-			cob.setCoinAmount(sr.getAmount());
-			cob.setCoinName(sr.getCoin());
-			cob.setExchangeRateAUD(sr.getExchangeRateAUD());
-			cob.setBalanceDate(sr.getTransactionDate());
-			
+			CoinOrderBalance cob = new CoinOrderBalance(
+					sr.getCoin(),
+					sr.getAmount(),
+					sr.getExchangeRateAUD(),
+					sr.getTransactionDate()
+					);
+
 			return cob;
 		};
 	}

@@ -11,9 +11,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.hdekker.cryptocgt.data.CGTEvent;
 import com.hdekker.cryptocgt.data.CoinOrderBalance;
-import com.hdekker.cryptocgt.data.TransactionType;
 import com.hdekker.cryptocgt.data.transaction.Order;
 import com.hdekker.cryptocgt.data.transaction.SendRecieves;
+import com.hdekker.cryptocgt.data.transaction.TransactionType;
 import com.hdekker.cryptocgt.imports.CSVUtils;
 import com.hdekker.cryptocgt.imports.OrdersCSVExtractor;
 import com.hdekker.cryptocgt.imports.SendRecieveConfig;
@@ -163,17 +163,33 @@ public class CGTEventTest {
 	@Test
 	public void uMostRecentIsFound() {
 		
-		CoinOrderBalance cob1 = new CoinOrderBalance();
-		cob1.setBalanceDate(LocalDateTime.now());
+		CoinOrderBalance cob1 = new CoinOrderBalance(
+				null,
+				null,
+				null,
+				LocalDateTime.now()
+				);
 		
-		CoinOrderBalance cob2 = new CoinOrderBalance();
-		cob2.setBalanceDate(LocalDateTime.now().minusDays(1));
+		CoinOrderBalance cob2 = new CoinOrderBalance(
+				null,
+				null,
+				null,
+				LocalDateTime.now().minusDays(1)
+				);
+
+		CoinOrderBalance cob3 = new CoinOrderBalance(
+				null,
+				null,
+				null,
+				LocalDateTime.now().minusDays(2)
+				
+				);
 		
-		CoinOrderBalance cob3 = new CoinOrderBalance();
-		cob3.setBalanceDate(LocalDateTime.now().minusDays(2));
-		
-		CoinOrderBalance cob4 = new CoinOrderBalance();
-		cob4.setBalanceDate(LocalDateTime.now().plusDays(2));
+		CoinOrderBalance cob4 = new CoinOrderBalance(
+				null,
+				null,
+				null,
+				LocalDateTime.now().plusDays(2));
 
 		BiFunction<CoinOrderBalance, List<CoinOrderBalance>, CoinOrderBalance> fn = CGTUtils.findTheMostRecentPurchase();
 		CoinOrderBalance cob = fn.apply(cob1, Arrays.asList(cob3, cob2, cob4));
@@ -186,141 +202,144 @@ public class CGTEventTest {
 	public void dateFilterTest() {
 		
 		LocalDateTime testTime = LocalDateTime.of(2017, 8, 21, 23, 3);
-		CGTEvent e = new CGTEvent();
-		e.setDisposedDate(testTime);
+		CGTEvent e = new CGTEvent(
+				testTime,
+				null,
+				0.0,
+				"");
 		List<CGTEvent> list = CGTUtils.dateFilter(LocalDateTime.of(2017, 07, 01, 00, 00), LocalDateTime.of(2018, 06, 30, 23, 59)).apply(Arrays.asList(e));
 		 assertTrue(list.get(0).equals(e));
 		
 	}
 	
 	// finally sum CGT events
-	@Test
-	public void itDetectsAndSummsCorrectCGTEvent() {
-		
-		BiFunction<List<Order>, List<SendRecieves>, Map<String, List<CoinOrderBalance>>> fn = CGTUtils.combineAndMapOrdersAndSendRecievesToCobs();
-		
-		// orders
-		Tuple2<BufferedReader, List<String>> orderInput = CSVUtils.openDocumentAndGetHeadings
-				.apply(userConfig.getBuysSellsCSV());
-		
-		Function<Tuple2<BufferedReader, List<String>>, List<Order>> orderfn = OrdersCSVExtractor.getOrders();
-		
-		// sends recieves
-		Tuple2<BufferedReader, List<String>> srinput = CSVUtils.openDocumentAndGetHeadings
-				.apply(userConfig.getSendsReceivesCSV());
-
-		Function<Tuple2<BufferedReader, List<String>>, List<SendRecieves>> srfn = 
-				SendRecieveConfig.getSendRecieves();
-
-		Map<String, List<CoinOrderBalance>> map = fn
-													.apply(orderfn.apply(orderInput), srfn.apply(srinput));
-		
-		
-		
-		// TODO fix map list in top level
-		Function<String, List<CGTEvent>> cgtsFun = CGTUtils.getCGTUsingOrdersSendsAndRecieves(map);
-			
-		// computes CGT per coin
-		Map<String, List<CGTEvent>> cgts = map.keySet()
-									.stream()
-									.collect(Collectors.toMap((s)->s, 
-											(s) -> {
-												log.info("Starting " + s);
-												return cgtsFun.apply(s);	
-											}
-									));
-		
-		// plaint old events, why?
-		List<CGTEvent> flattened = cgts.entrySet().stream()
-												.map(entry-> entry.getValue())
-												.reduce((a,n)->{
-													List<CGTEvent> l = new ArrayList<>();
-													l.addAll(n);
-													l.addAll(a);
-													return l;
-												}).orElseThrow();
-		
-		// writes report ahh yuk.
-		ObjectMapper om = new ObjectMapper();
-		om.registerModule(new JavaTimeModule());
-		
-		try {
-			log.info(om.writeValueAsString(cgts));
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		FileWriter fw = null;
-		
-		
-		try {
-			fw = new FileWriter(new File(userConfig.getReportLocation()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		BufferedWriter writer = new BufferedWriter(fw);
-		
-		List<String> keys = cgts.keySet().stream().collect(Collectors.toList());
-		
-		for(int k = 0; k<keys.size(); k++) {
-			
-			List<CGTEvent> items = cgts.get(keys.get(k));
-			
-			for(int i = 0; i<items.size(); i++) {
-				try {
-					CGTEvent cgt = items.get(i);
-					writer.write(cgt.getCoinName() + "," + cgt.getCgt() + ",\"" + cgt.getDisposedDate() + "\",\"" + cgt.getPurchasedDate() + "\"");
-					writer.newLine();
-					
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			
-			Double sum17 = 0.0; 
-			Double sum18 = 0.0;
-			Double sum19 = 0.0;
-			Double sum20 = 0.0;
-			
-			try {
-				// todo silly
-				sum17 = CGTUtils.dateFilter(LocalDateTime.of(2017, 07, 01, 00, 00), LocalDateTime.of(2018, 06, 30, 23, 59)).andThen(CGTUtils.cgtSummer()).apply(items);
-				sum18 = CGTUtils.dateFilter(LocalDateTime.of(2018, 07, 01, 00, 00), LocalDateTime.of(2019, 06, 30, 23, 59)).andThen(CGTUtils.cgtSummer()).apply(items);
-				sum19 = CGTUtils.dateFilter(LocalDateTime.of(2019, 07, 01, 00, 00), LocalDateTime.of(2020, 06, 30, 23, 59)).andThen(CGTUtils.cgtSummer()).apply(items);
-				sum20 = CGTUtils.dateFilter(LocalDateTime.of(2020, 07, 01, 00, 00), LocalDateTime.of(2021, 06, 30, 23, 59)).andThen(CGTUtils.cgtSummer()).apply(items);
-						
-			}catch (Exception e) {
-				log.info("no value present for key " + keys.get(k));
-			}
-			
-			try {
-				writer.write(",,,,\"The total cgt balance for " + keys.get(k) + " is\"," + sum17 + "," + sum18 + "," + sum19 + "," + sum20);
-				writer.newLine();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-		}
-		try {
-			writer.close();
-			fw.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-//		log.info("Calculated " + cgts.size() + " events");
+//	@Test
+//	public void itDetectsAndSummsCorrectCGTEvent() {
 //		
-//		log.info(cgts.stream().map(c->c.getCgt()).collect(Collectors.toList()).toString());
+//		BiFunction<List<Order>, List<SendRecieves>, Map<String, List<CoinOrderBalance>>> fn = CGTUtils.combineAndMapOrdersAndSendRecievesToCobs();
 //		
-//		log.info("The final cgt for "+ cgts.get(0).getCoinName() +" came to " + cgtSummer().apply(cgts));
+//		// orders
+//		Tuple2<BufferedReader, List<String>> orderInput = CSVUtils.openDocumentAndGetHeadings
+//				.apply(userConfig.getBuysSellsCSV());
 //		
-	}
-	
-	// now go through each coin and print an ordered report
-	
+//		Function<Tuple2<BufferedReader, List<String>>, List<Order>> orderfn = OrdersCSVExtractor.getOrders();
+//		
+//		// sends recieves
+//		Tuple2<BufferedReader, List<String>> srinput = CSVUtils.openDocumentAndGetHeadings
+//				.apply(userConfig.getSendsReceivesCSV());
+//
+//		Function<Tuple2<BufferedReader, List<String>>, List<SendRecieves>> srfn = 
+//				SendRecieveConfig.getSendRecieves();
+//
+//		Map<String, List<CoinOrderBalance>> map = fn
+//													.apply(orderfn.apply(orderInput), srfn.apply(srinput));
+//		
+//		
+//		
+//		// TODO fix map list in top level
+//		Function<String, List<CGTEvent>> cgtsFun = CGTUtils.getCGTUsingOrdersSendsAndRecieves(map);
+//			
+//		// computes CGT per coin
+//		Map<String, List<CGTEvent>> cgts = map.keySet()
+//									.stream()
+//									.collect(Collectors.toMap((s)->s, 
+//											(s) -> {
+//												log.info("Starting " + s);
+//												return cgtsFun.apply(s);	
+//											}
+//									));
+//		
+//		// plaint old events, why?
+//		List<CGTEvent> flattened = cgts.entrySet().stream()
+//												.map(entry-> entry.getValue())
+//												.reduce((a,n)->{
+//													List<CGTEvent> l = new ArrayList<>();
+//													l.addAll(n);
+//													l.addAll(a);
+//													return l;
+//												}).orElseThrow();
+//		
+//		// writes report ahh yuk.
+//		ObjectMapper om = new ObjectMapper();
+//		om.registerModule(new JavaTimeModule());
+//		
+//		try {
+//			log.info(om.writeValueAsString(cgts));
+//		} catch (JsonProcessingException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		FileWriter fw = null;
+//		
+//		
+//		try {
+//			fw = new FileWriter(new File(userConfig.getReportLocation()));
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		BufferedWriter writer = new BufferedWriter(fw);
+//		
+//		List<String> keys = cgts.keySet().stream().collect(Collectors.toList());
+//		
+//		for(int k = 0; k<keys.size(); k++) {
+//			
+//			List<CGTEvent> items = cgts.get(keys.get(k));
+//			
+//			for(int i = 0; i<items.size(); i++) {
+//				try {
+//					CGTEvent cgt = items.get(i);
+//					writer.write(cgt.getCoinName() + "," + cgt.getCgt() + ",\"" + cgt.getDisposedDate() + "\",\"" + cgt.getPurchasedDate() + "\"");
+//					writer.newLine();
+//					
+//				} catch (IOException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			}
+//			
+//			Double sum17 = 0.0; 
+//			Double sum18 = 0.0;
+//			Double sum19 = 0.0;
+//			Double sum20 = 0.0;
+//			
+//			try {
+//				// todo silly
+//				sum17 = CGTUtils.dateFilter(LocalDateTime.of(2017, 07, 01, 00, 00), LocalDateTime.of(2018, 06, 30, 23, 59)).andThen(CGTUtils.cgtSummer()).apply(items);
+//				sum18 = CGTUtils.dateFilter(LocalDateTime.of(2018, 07, 01, 00, 00), LocalDateTime.of(2019, 06, 30, 23, 59)).andThen(CGTUtils.cgtSummer()).apply(items);
+//				sum19 = CGTUtils.dateFilter(LocalDateTime.of(2019, 07, 01, 00, 00), LocalDateTime.of(2020, 06, 30, 23, 59)).andThen(CGTUtils.cgtSummer()).apply(items);
+//				sum20 = CGTUtils.dateFilter(LocalDateTime.of(2020, 07, 01, 00, 00), LocalDateTime.of(2021, 06, 30, 23, 59)).andThen(CGTUtils.cgtSummer()).apply(items);
+//						
+//			}catch (Exception e) {
+//				log.info("no value present for key " + keys.get(k));
+//			}
+//			
+//			try {
+//				writer.write(",,,,\"The total cgt balance for " + keys.get(k) + " is\"," + sum17 + "," + sum18 + "," + sum19 + "," + sum20);
+//				writer.newLine();
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			
+//		}
+//		try {
+//			writer.close();
+//			fw.close();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		
+////		log.info("Calculated " + cgts.size() + " events");
+////		
+////		log.info(cgts.stream().map(c->c.getCgt()).collect(Collectors.toList()).toString());
+////		
+////		log.info("The final cgt for "+ cgts.get(0).getCoinName() +" came to " + cgtSummer().apply(cgts));
+////		
+//	}
+//	
+//	// now go through each coin and print an ordered report
+//	
 }

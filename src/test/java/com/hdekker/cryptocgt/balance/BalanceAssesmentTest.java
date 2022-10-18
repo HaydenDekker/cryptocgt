@@ -1,4 +1,4 @@
-package com.hdekker.cryptocgt;
+package com.hdekker.cryptocgt.balance;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -17,11 +17,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.hdekker.cryptocgt.data.AccountOrderSnapshot;
 import com.hdekker.cryptocgt.data.CoinBalance;
 import com.hdekker.cryptocgt.data.CoinOrderBalance;
-import com.hdekker.cryptocgt.data.TransactionType;
 import com.hdekker.cryptocgt.data.transaction.Order;
 import com.hdekker.cryptocgt.data.transaction.SendRecieves;
-import com.hdekker.cryptocgt.interfaces.AccountOrdersAssesment;
-import com.hdekker.cryptocgt.interfaces.BalanceAssesment;
+import com.hdekker.cryptocgt.data.transaction.TransactionType;
+import com.hdekker.cryptocgt.orders.AccountOrdersAssesment;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -110,10 +109,13 @@ public class BalanceAssesmentTest {
 	@Test
 	public void addBalance() {
 		
-		CoinBalance cb1 = new CoinBalance();
-		cb1.setCoinAmount(0.234);
-		CoinBalance cb2 = new CoinBalance();
-		cb2.setCoinAmount(0.266);
+		CoinBalance cb1 = new CoinBalance(
+				"", 
+				0.234);
+	
+		CoinBalance cb2 = new CoinBalance(
+				"", 
+				0.266);
 		
 		BiFunction<CoinBalance, CoinBalance, CoinBalance> fn = BalanceAssesment.sumCoinBalance();
 		

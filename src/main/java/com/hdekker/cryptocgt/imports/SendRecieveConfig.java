@@ -11,8 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
-import com.hdekker.cryptocgt.data.TransactionType;
 import com.hdekker.cryptocgt.data.transaction.SendRecieves;
+import com.hdekker.cryptocgt.data.transaction.TransactionType;
 
 @Configuration
 public class SendRecieveConfig {

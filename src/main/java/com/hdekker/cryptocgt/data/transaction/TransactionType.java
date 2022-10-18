@@ -1,4 +1,4 @@
-package com.hdekker.cryptocgt.data;
+package com.hdekker.cryptocgt.data.transaction;
 
 public enum TransactionType {
 

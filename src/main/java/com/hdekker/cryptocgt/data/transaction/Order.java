@@ -2,8 +2,6 @@ package com.hdekker.cryptocgt.data.transaction;
 
 import java.time.LocalDateTime;
 
-import com.hdekker.cryptocgt.data.TransactionType;
-
 /**
  * Transaction Date	Type	Market	Amount	Rate inc. fee	Rate ex. fee	Fee	Fee AUD (inc GST)	GST AUD	Total AUD	Total (inc GST)
 20/5/2020 18:54	Buy	STEEM/AUD	63.3510153	0.473552	0.46886337	0.29702970 AUD	0.3	0.03	30	30.00 AUD

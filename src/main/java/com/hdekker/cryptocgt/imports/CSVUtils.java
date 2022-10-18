@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.hdekker.cryptocgt.data.TransactionType;
+import com.hdekker.cryptocgt.data.transaction.TransactionType;
 
 
 public class CSVUtils {

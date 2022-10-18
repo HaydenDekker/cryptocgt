@@ -29,7 +29,7 @@ public class AppConfigTest {
 	@Test
 	public void canGetConfiguredValuesInSpring() {
 		
-		assertThat(userConfig.getBuysSellsCSV(), equalTo("/Users/HDekker/Documents/2021/August 2021/Tax/orderhistory.csv"));
+		assertThat(userConfig.getBuysSellsCSV(), equalTo("src/test/resources/orderhistory-test.csv"));
 		
 	}
 	

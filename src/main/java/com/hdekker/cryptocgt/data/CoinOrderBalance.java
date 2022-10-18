@@ -5,24 +5,23 @@ import java.time.LocalDateTime;
 // order always has a from and two but with an exchange rate
 public class CoinOrderBalance extends CoinBalance{
 
-	Double exchangeRateAUD;
+	final Double exchangeRateAUD;
 	
 	public Double getExchangeRateAUD() {
 		return exchangeRateAUD;
 	}
-	public void setExchangeRateAUD(Double exchangeRateAUD) {
-		this.exchangeRateAUD = exchangeRateAUD;
-	}
-	
-	LocalDateTime balanceDate;
+
+	final LocalDateTime balanceDate;
 
 	public LocalDateTime getBalanceDate() {
 		return balanceDate;
 	}
-	public void setBalanceDate(LocalDateTime balanceDate) {
+
+	public CoinOrderBalance(String coinName, Double coinAmount, Double exchangeRateAUD, LocalDateTime balanceDate) {
+		super(coinName, coinAmount);
+		this.exchangeRateAUD = exchangeRateAUD;
 		this.balanceDate = balanceDate;
 	}
-	
 	
 	
 }
