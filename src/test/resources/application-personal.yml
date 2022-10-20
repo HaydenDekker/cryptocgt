@@ -1,0 +1,8 @@
+cryptocgt:
+  config: 
+    buysSellsCSV: /Users/Hayden Dekker/OneDrive/Professional/Tax/2022/orderhistory.csv
+    sendsReceivesCSV: /Users/Hayden Dekker/OneDrive/Professional/Tax/2022/sendsreceives.csv
+    reportLocation: /Users/Hayden Dekker/OneDrive/Professional/Tax/2022/cgt-crypto.csv
+logger:
+  level:
+    ROOT: DEBUG

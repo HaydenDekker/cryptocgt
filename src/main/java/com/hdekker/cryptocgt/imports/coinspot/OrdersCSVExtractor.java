@@ -1,4 +1,4 @@
-package com.hdekker.cryptocgt.imports;
+package com.hdekker.cryptocgt.imports.coinspot;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import com.hdekker.cryptocgt.data.transaction.Order;
 import com.hdekker.cryptocgt.data.transaction.TransactionType;
+import com.hdekker.cryptocgt.imports.CSVFormatter;
 
 @Component
 public class OrdersCSVExtractor {
@@ -32,6 +33,9 @@ public class OrdersCSVExtractor {
 	@Autowired
 	CSVFormatter formatter;
 	
+	@Autowired
+	CoinspotDateTimeConverter dateTimeConverter;
+	
 	public List<Order> getOrders(Reader isr) throws Exception{
 			
 			try {
@@ -41,9 +45,7 @@ public class OrdersCSVExtractor {
 					.map(rec->{
 						
 						Order o = new Order(
-								CSVUtils.Converters
-									.dateTimeConverter
-									.apply(rec.get(OrderColumns.TransactionDate)),
+								dateTimeConverter.convert(rec.get(OrderColumns.TransactionDate)),
 								TransactionType.valueOf(rec.get(OrderColumns.Type)),
 								rec.get(OrderColumns.Market),
 								Double.valueOf(rec.get(OrderColumns.Amount)),

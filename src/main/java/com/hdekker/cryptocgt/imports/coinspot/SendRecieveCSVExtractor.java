@@ -1,9 +1,8 @@
-package com.hdekker.cryptocgt.imports;
+package com.hdekker.cryptocgt.imports.coinspot;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -13,22 +12,30 @@ import org.springframework.context.annotation.Configuration;
 
 import com.hdekker.cryptocgt.data.transaction.SendRecieves;
 import com.hdekker.cryptocgt.data.transaction.TransactionType;
+import com.hdekker.cryptocgt.imports.CSVFormatter;
 
 @Configuration
-public class SendRecieveConfig {
+public class SendRecieveCSVExtractor {
 	
-	Logger log = LoggerFactory.getLogger(SendRecieveConfig.class);
+	Logger log = LoggerFactory.getLogger(SendRecieveCSVExtractor.class);
 
 	public enum SendReceiveColumns{
 		TRANSACTION_DATE,
 		TYPE,
 		COIN,
+		STATUS,
+		FEE,
 		AMOUNT,
+		ADDRESS,
+		TXID,
 		EX_AUD_RATE
 	}
 	
 	@Autowired
 	CSVFormatter formatter;
+	
+	@Autowired
+	CoinspotDateTimeConverter dateTimeConverter;
 	
 	/**
 	 * Requires columns should be present, else no gaurantees
@@ -48,8 +55,7 @@ public class SendRecieveConfig {
 					SendRecieves srs = new SendRecieves(
 							rec.get(SendReceiveColumns.COIN), 
 							Double.valueOf(rec.get(SendReceiveColumns.AMOUNT)), 
-							CSVUtils.Converters.dateTimeConverter
-								.apply(rec.get(SendReceiveColumns.TRANSACTION_DATE)), 
+							dateTimeConverter.convert(rec.get(SendReceiveColumns.TRANSACTION_DATE)), 
 							TransactionType.valueOf(rec.get(SendReceiveColumns.TYPE)), 
 							Double.valueOf(rec.get(SendReceiveColumns.EX_AUD_RATE)));
 					return srs;

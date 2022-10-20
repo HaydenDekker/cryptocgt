@@ -7,19 +7,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.hdekker.cryptocgt.AppConfig;
 import com.hdekker.cryptocgt.data.transaction.SendRecieves;
 import com.hdekker.cryptocgt.data.transaction.TransactionType;
-import com.hdekker.cryptocgt.imports.SendRecieveConfig;
+import com.hdekker.cryptocgt.imports.coinspot.SendRecieveCSVExtractor;
 
 import reactor.util.function.Tuple2;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.io.BufferedReader;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
-import java.util.function.Function;
-import java.util.function.Predicate;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -30,7 +24,7 @@ public class SendRecieveConfigTest {
 	AppConfig userConfig;
 	
 	@Autowired
-	SendRecieveConfig sendReceiveExtractor;
+	SendRecieveCSVExtractor sendReceiveExtractor;
 	
 	/**
 	 * Requires application properties to be set.

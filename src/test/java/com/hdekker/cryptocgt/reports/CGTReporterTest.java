@@ -1,9 +1,9 @@
-package com.hdekker.cryptocgt.orders;
+package com.hdekker.cryptocgt.reports;
 
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class AccountOrderAssesmentTest {
+public class CGTReporterTest {
 
 	
 	

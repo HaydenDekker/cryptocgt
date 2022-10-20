@@ -4,40 +4,23 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
-import com.hdekker.cryptocgt.data.AccountOrderSnapshot;
-import com.hdekker.cryptocgt.data.CoinBalance;
-import com.hdekker.cryptocgt.data.CoinOrderBalance;
-import com.hdekker.cryptocgt.data.transaction.SendRecieves;
+import com.hdekker.cryptocgt.data.AssetBalance;
+import com.hdekker.cryptocgt.data.AssetBalance.BalanceType;
 
 public class BalanceAssesment {
-
-	public static BiFunction<CoinBalance, CoinBalance, CoinBalance> sumCoinBalance(){
-		return (cb1, cb2) -> {
-			
-			double summedBalance = cb2.getCoinAmount() + cb1.getCoinAmount();
-			
-			CoinBalance cb = new CoinBalance(
-					cb2.getCoinName(), 
-					summedBalance
-			);
-
-			return cb;
-			
-		};
-	}
 	
-	public static BiFunction<CoinOrderBalance, CoinOrderBalance, CoinOrderBalance> sumCoinOrderBalance(){
+	public static BiFunction<AssetBalance, AssetBalance, AssetBalance> sumCoinOrderBalance(){
 		return (cb1Earliest, cb2) -> {
 			
-			double sum = cb2.getCoinAmount() + cb1Earliest.getCoinAmount();
+			double sum = cb2.getAssetAmount() + cb1Earliest.getAssetAmount();
 			
-			CoinOrderBalance cb = new CoinOrderBalance(
-					cb1Earliest.getCoinName(), 
+			AssetBalance cb = new AssetBalance(
+					cb1Earliest.getAssetName(), 
 					sum, 
 					cb1Earliest.getExchangeRateAUD(),
-					cb1Earliest.getBalanceDate()
+					cb1Earliest.getBalanceDate(),
+					BalanceType.Sum
 					);
 			
 			return cb;
@@ -48,32 +31,15 @@ public class BalanceAssesment {
 	// TODO filter to a map of cointype by balances first then
 	// reduce each
 	public static 
-		Function<List<CoinOrderBalance>, 
+		Function<List<AssetBalance>, 
 				Function<String, Optional<Double>>> reduceBalanceForCoin(){
 		
 		return (allBalances) -> (coinName) -> {
-			return allBalances.stream().filter(s->s.getCoinName().equals(coinName))
-				.map(c->c.getCoinAmount())
+			return allBalances.stream().filter(s->s.getAssetName().equals(coinName))
+				.map(c->c.getAssetAmount())
 			.reduce((a,b)-> a+b);
 		};
 		
 	}
 	
-	public static Function<AccountOrderSnapshot, Stream<CoinOrderBalance>> streamBalances(){
-		return (snap) -> Stream.of(snap.getCob1(), snap.getCob2());
-	}
-	
-	public static Function<SendRecieves, CoinOrderBalance> sendRecieveToCoinOrderBalance(){
-		return (sr) -> {
-			
-			CoinOrderBalance cob = new CoinOrderBalance(
-					sr.getCoin(),
-					sr.getAmount(),
-					sr.getExchangeRateAUD(),
-					sr.getTransactionDate()
-					);
-
-			return cob;
-		};
-	}
 }

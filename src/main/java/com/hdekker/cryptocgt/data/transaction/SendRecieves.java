@@ -9,7 +9,6 @@ public class SendRecieves {
 	final LocalDateTime transactionDate;
 	final TransactionType type;
 	final Double exchangeRateAUD;
-
 	
 	public SendRecieves(String coin, Double amount, LocalDateTime transactionDate, TransactionType type,
 			Double exchangeRateAUD) {

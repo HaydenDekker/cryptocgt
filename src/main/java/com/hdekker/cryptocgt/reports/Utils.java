@@ -1,4 +1,4 @@
-package com.hdekker.cryptocgt.interfaces;
+package com.hdekker.cryptocgt.reports;
 
 import java.util.function.Function;
 
