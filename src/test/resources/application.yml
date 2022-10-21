@@ -3,3 +3,5 @@ cryptocgt:
     buysSellsCSV: src/test/resources/orderhistory-test.csv
     sendsReceivesCSV: src/test/resources/sendsreceives-test.csv
     reportLocation: src/test/resources/cgt-crypto-test.csv
+    taxYearBegin: 01-07
+    taxYearEnd: 30-06

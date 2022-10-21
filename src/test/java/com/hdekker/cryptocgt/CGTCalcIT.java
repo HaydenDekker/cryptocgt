@@ -30,7 +30,7 @@ import static org.hamcrest.Matchers.*;
 public class CGTCalcIT {
 
 	@Autowired
-	CGTCalculator calculator;
+	CGTAnaliser calculator;
 	
 	@Autowired
 	CoinspotImporter coinspotimporter;
@@ -59,7 +59,7 @@ public class CGTCalcIT {
 				stubOrdersReader(),
 				stubSendReceivesReader());
 		
-		List<CGTTaxReport> report = calculator.calculateCGT(assetBalances);
+		List<CGTTaxReport> report = calculator.analyiseCGT(assetBalances);
 		
 		assertThat(report, notNullValue());
 		assertThat(report.size(), greaterThan(0));

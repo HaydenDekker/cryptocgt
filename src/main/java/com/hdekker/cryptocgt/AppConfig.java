@@ -1,7 +1,12 @@
 package com.hdekker.cryptocgt;
 
+import java.time.LocalDate;
+import java.time.MonthDay;
+import java.util.Calendar;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Configuration
 @ConfigurationProperties(prefix = "cryptocgt.config")
@@ -11,6 +16,24 @@ public class AppConfig {
 	String sendsReceivesCSV;
 	String reportLocation;
 	
+	@DateTimeFormat(pattern = "dd-MM")
+	Calendar taxYearBegin;
+	
+	@DateTimeFormat(pattern = "dd-MM")
+	Calendar taxYearEnd;
+
+	public Calendar getTaxYearBegin() {
+		return taxYearBegin;
+	}
+	public void setTaxYearBegin(Calendar taxYearBegin) {
+		this.taxYearBegin = taxYearBegin;
+	}
+	public Calendar getTaxYearEnd() {
+		return taxYearEnd;
+	}
+	public void setTaxYearEnd(Calendar taxYearEnd) {
+		this.taxYearEnd = taxYearEnd;
+	}
 	public String getBuysSellsCSV() {
 		return buysSellsCSV;
 	}
