@@ -1,6 +1,6 @@
 package com.hdekker.cryptocgt.reports;
 
-import java.time.LocalDateTime;
+import java.time.Year;
 import java.util.List;
 import com.hdekker.cryptocgt.data.CGTEvent;
 
@@ -12,24 +12,20 @@ import com.hdekker.cryptocgt.data.CGTEvent;
  */
 public class CGTTaxReport {
 
-	final LocalDateTime from;
-	final LocalDateTime to;
+	final Year taxYear;
 	final List<CGTEvent> events;
 	final Double cgtTotal;
 	
-	public CGTTaxReport(LocalDateTime from, LocalDateTime to, List<CGTEvent> events,
+	public CGTTaxReport(Year taxYear, List<CGTEvent> events,
 			Double cgtTotal) {
 		super();
-		this.from = from;
-		this.to = to;
+		this.taxYear = taxYear;
 		this.events = events;
 		this.cgtTotal = cgtTotal;
 	}
-	public LocalDateTime getFrom() {
-		return from;
-	}
-	public LocalDateTime getTo() {
-		return to;
+	
+	public Year getTaxYear() {
+		return taxYear;
 	}
 	public List<CGTEvent> getEvents() {
 		return events;

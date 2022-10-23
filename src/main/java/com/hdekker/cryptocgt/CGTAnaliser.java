@@ -20,7 +20,6 @@ public class CGTAnaliser {
 
 	Logger log = LoggerFactory.getLogger(CGTAnaliser.class);
 	
-	
 	@Autowired
 	AppConfig appConfig;
 	
@@ -33,7 +32,6 @@ public class CGTAnaliser {
 	@Autowired
 	CGTCalculator cgtCalculator;
 	
-	
 	public List<CGTTaxReport> analyiseCGT(
 			List<AssetBalance> assetBalances) throws Exception {
 		
@@ -42,9 +40,9 @@ public class CGTAnaliser {
 				assetBalances);
 		
 		// Calculate CGT on a per coin basis
-		List<CGTEvent> cgts =cgtCalculator.calculateCGTByAsset(map);
+		List<CGTEvent> cgts = cgtCalculator.calculateCGTByAsset(map);
 		
-		// reporting filter into tax years
+		// Reporting filter into tax years
 		return reporter.createReport(cgts);
 		
 	}

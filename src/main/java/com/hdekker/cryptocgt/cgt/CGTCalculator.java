@@ -2,7 +2,6 @@ package com.hdekker.cryptocgt.cgt;
 
 import static com.hdekker.cryptocgt.balance.BalanceAssesment.sumCoinOrderBalance;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -13,8 +12,14 @@ import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.hdekker.cryptocgt.cgt.search.MoreThan12MonthDateSearcher;
+import com.hdekker.cryptocgt.cgt.search.MostRecentDateSearcher;
+import com.hdekker.cryptocgt.cgt.search.refactor.CGTEventDateRangeSearcher;
+import com.hdekker.cryptocgt.cgt.search.refactor.CGTEventDateSearchType;
+import com.hdekker.cryptocgt.cgt.search.refactor.SearchQuery;
 import com.hdekker.cryptocgt.data.AssetBalance;
 import com.hdekker.cryptocgt.data.CGTEvent;
 import com.hdekker.cryptocgt.data.AssetBalance.BalanceType;
@@ -41,7 +46,6 @@ public class CGTCalculator {
 		
 		return (cobCurrent, cobPast)-> {
 			
-			
 			Double purchaseCost = Math.abs(cobCurrent.getAssetAmount())*cobPast.getExchangeRateAUD();
 			Double sellPrice = Math.abs(cobCurrent.getAssetAmount())*cobCurrent.getExchangeRateAUD();
 			
@@ -58,19 +62,13 @@ public class CGTCalculator {
 		
 	}
 	
-	public static <T> BiFunction<T, List<T>, T> findTheMostRecentPurchase(Function<T, LocalDateTime> dtProvider){
-		return (cob, list) -> {
-			
-			// reverse order. I'm sure this would be horrible for long lists.
-			List<T> sorted = list.stream().sorted((cob1, cob2)-> dtProvider.apply(cob2).compareTo(dtProvider.apply(cob1)))
-														.collect(Collectors.toList());
-			return sorted.stream()
-					.filter(cob1->dtProvider.apply(cob).compareTo(dtProvider.apply(cob1))>0)
-					.findFirst().orElseThrow();
-		};
-	}
+	@Autowired
+	MoreThan12MonthDateSearcher moreThan12MonthSearcher;
 	
-	public static Function<AssetBalance, Stream<CGTEvent>> createCGTEventsForDisposal(List<AssetBalance> balanceList){
+	@Autowired
+	MostRecentDateSearcher mostRecentDateSearcher;
+	
+	public Function<AssetBalance, Stream<CGTEvent>> createCGTEventsForDisposal(List<AssetBalance> balanceList){
 		
 		// statefull list for as long as the function is used.
 		Logger log = LoggerFactory.getLogger(CGTUtils.class);
@@ -81,20 +79,26 @@ public class CGTCalculator {
 			
 			AssetBalance mostRecent = null;
 			
-			try {
-			mostRecent = findTheMostRecentPurchase(AssetBalance::getBalanceDate)
-					.apply(disposal, balanceList);
-			//log.info("Most recent purchase is on " + mostRecent.getBalanceDate() + " of " + mostRecent.getCoinAmount());
+			mostRecent = moreThan12MonthSearcher.search(AssetBalance::getBalanceDate)
+					.apply(disposal, balanceList)
+					.orElse(null);
 			
+			try {
+			// TODO this needs to change to a maximise return function.
+		    // Choose item over 12 months if available else choose most recent.
+			// That way more purchases have a potential to reach the 12 month discount
+			// marker.
+			
+			if(mostRecent==null) {
+				mostRecent = mostRecentDateSearcher.search(AssetBalance::getBalanceDate)
+						.apply(disposal, balanceList)
+						.orElseThrow();
+			}
 			}
 			catch(Exception e) {
-				
-				log.info("Couldn't find most recent purchase to match the sale.");
-				log.info(balanceList.size() + " is the size of the balance list.");
-				log.info("the disposal was " + Utils.toJson(AssetBalance.class).apply(disposal));
-				
+
 				if(disposal.getAssetAmount()*disposal.getExchangeRateAUD()>1) {
-					log.info("This was too big for just a rounding issue");
+					log.error("This was too big for just a rounding issue");
 				}
 				
 				return Stream.empty();
@@ -118,7 +122,7 @@ public class CGTCalculator {
 						disposal.getBalanceDate(),
 						BalanceType.Sum);
 				
-				// return the stream.
+				// return the stream. ohhh dear // TODO recursive, can it be flattened...
 				stream = Stream.concat(stream, createCGTEventsForDisposal(balanceList).apply(balance));
 				
 				
