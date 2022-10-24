@@ -15,15 +15,23 @@ public class CGTTaxReport {
 	final Year taxYear;
 	final List<CGTEvent> events;
 	final Double cgtTotal;
+	final Double discountsTotal;
 	
-	public CGTTaxReport(Year taxYear, List<CGTEvent> events,
-			Double cgtTotal) {
+	public CGTTaxReport(Year taxYear, 
+			List<CGTEvent> events,
+			Double cgtTotal,
+			Double discountsTotal) {
 		super();
 		this.taxYear = taxYear;
 		this.events = events;
 		this.cgtTotal = cgtTotal;
+		this.discountsTotal = discountsTotal;
 	}
 	
+	public Double getDiscountsTotal() {
+		return discountsTotal;
+	}
+
 	public Year getTaxYear() {
 		return taxYear;
 	}

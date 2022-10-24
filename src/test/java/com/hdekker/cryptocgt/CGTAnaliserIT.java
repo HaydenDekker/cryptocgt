@@ -68,9 +68,18 @@ public class CGTAnaliserIT {
 		assertThat(report, notNullValue());
 		assertThat(report.size(), greaterThan(0));
 		
-		log.info("calculator found " + report.size() + " years of data in given config.");
+		log.info("calculator found " 
+				+ report.size() 
+				+ " years of data in given config.");
+		
 		report.forEach(r->{
-			log.info("Year " + r.getTaxYear() + " has a total captial gain of " + r.getCgtTotal());
+			log.info("Year " 
+				+ r.getTaxYear() 
+				+ " has a total captial gain of " 
+				+ r.getCgtTotal()
+				+ " and discounts at " 
+				+ r.getDiscountsTotal()
+				);
 		});
 		
 		

@@ -4,6 +4,7 @@ import java.io.FileWriter;
 import java.time.Year;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -42,21 +43,29 @@ public class CGTReporter {
 		om.registerModule(new JavaTimeModule());
 	}
 	
-	private Map<Year, Double> summCGT(Map<Year, List<CGTEvent>> events){
+	private Double summCGT(List<CGTEvent> events){
 		
 		return events
-		.entrySet()
-		.stream()
-		.collect(Collectors.toMap(
-				k->k.getKey(), v->{
-					
-					return v.getValue()
-						.stream()
-						.map(c->c.getCgt())
-						.reduce((a,b)-> a+b)
-						.get();
-
-				}));
+			.stream()
+			.map(c->c.getCgt())
+			.reduce((a,b)-> a+b)
+			.get();
+	
+	}
+	
+	private Predicate<CGTEvent> isEventDiscountable = (cgt) ->{
+		return cgt.getDisposedDate().minusYears(1)
+				.compareTo(cgt.getPurchasedDate()) >= 0;
+	};
+	
+	Double calculateDiscount(List<CGTEvent> events){
+		
+		return events.stream()
+					.filter(e->
+						isEventDiscountable.test(e)
+					).map(e->e.getCgt())
+					.reduce((a, b)-> a+b)
+					.orElse(0.0);
 		
 	}
 	
@@ -67,16 +76,18 @@ public class CGTReporter {
 
 		Map<Year, List<CGTEvent>> eventsByYear = mapper.mapByYear(assetCGTEvents, CGTEvent::getDisposedDate);
 		
-		Map<Year, Double> summedCGTByYear = summCGT(eventsByYear);
-		
-		return summedCGTByYear.entrySet()
+		return eventsByYear.entrySet()
 					.stream()
-					.map(es->
-						new CGTTaxReport(
+					.map(es-> {
+						
+					 	List<CGTEvent> events = eventsByYear.get(es.getKey());
+					
+						return new CGTTaxReport(
 								es.getKey(), 
-								eventsByYear.get(es.getKey()), 
-								es.getValue())
-					)
+								events, 
+								summCGT(events),
+								calculateDiscount(events));
+					})
 					.collect(Collectors.toList());
 	}
 	
