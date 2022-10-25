@@ -30,7 +30,7 @@ public class CGTUtilsTest {
 		Double er = Double.valueOf(totalIncGST)/Double.valueOf(amount);
 		
 		AssetBalance ab = new AssetBalance(
-				totalIncGST, 
+				market, 
 				Double.valueOf(amount), 
 				er, 
 				date, 
@@ -54,13 +54,13 @@ public class CGTUtilsTest {
 
 		return Arrays.asList(
 				// 4th is a CGT event.. sells parts of the most transaction being the item on the 13th.
-				buildOrder(LocalDateTime.of(2017, 7, 3, 13, 46), TransactionType.Sell, "ETH/EOS", "0.015", "5.4", "1.26932232 EOS"),
+				buildOrder(LocalDateTime.of(2017, 7, 3, 13, 46), TransactionType.Sell, "ETH", "0.015", "5.4", "1.26932232"),
 				// 3rd is a CGT event.. sells part of most recent transaction being 10 minutes before.
-				buildOrder(LocalDateTime.of(2017, 6, 13, 17, 31), TransactionType.Sell, "ETH/GNT", "0.06", "31.97", "42.00726474 GNT"),
+				buildOrder(LocalDateTime.of(2017, 6, 13, 17, 31), TransactionType.Sell, "ETH", "0.06", "31.97", "42.00726474"),
 				// 2nd but.. no CGT event. Accumulated ETH = .16363634 + .09898585
-				buildOrder(LocalDateTime.of(2017, 6, 13, 17, 22), TransactionType.Sell, "BTC/ETH", "0.014", "52.37", "0.09898585 ETH"),
+				buildOrder(LocalDateTime.of(2017, 6, 13, 17, 22), TransactionType.Sell, "BTC", "0.014", "52.37", "0.09898585"),
 				// initial.. no CGT event
-				buildOrder(LocalDateTime.of(2017, 6, 21, 16, 51), TransactionType.Sell, "BTC/ETH", "0.01", "28.31", "0.16363634 ETH"));
+				buildOrder(LocalDateTime.of(2017, 6, 21, 16, 51), TransactionType.Sell, "BTC", "0.01", "28.31", "0.16363634"));
 	}
 	
 	
@@ -82,9 +82,9 @@ public class CGTUtilsTest {
 	public void createAMapOfCoinOrderBalancesForCGTCalculations() {
 
 		Map<String, List<AssetBalance>> map = cgtUtils.mapAssetBalancesByAssetName(testOrders());
-		assertTrue(map.keySet().size()==4);
+		assertTrue(map.keySet().size()==2);
 		assertTrue(map.get("BTC").size()==2);
-		assertTrue(map.get("ETH").size()==4);
+		assertTrue(map.get("ETH").size()==2);
 		
 		
 	}
