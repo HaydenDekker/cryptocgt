@@ -14,20 +14,27 @@ public class CGTTaxReport {
 
 	final Year taxYear;
 	final List<CGTEvent> events;
+	final Double capitalGain;
 	final Double cgtTotal;
 	final Double discountsTotal;
 	
 	public CGTTaxReport(Year taxYear, 
 			List<CGTEvent> events,
+			Double capitalGain,
 			Double cgtTotal,
 			Double discountsTotal) {
 		super();
 		this.taxYear = taxYear;
 		this.events = events;
+		this.capitalGain = capitalGain;
 		this.cgtTotal = cgtTotal;
 		this.discountsTotal = discountsTotal;
 	}
 	
+	public Double getCapitalGain() {
+		return capitalGain;
+	}
+
 	public Double getDiscountsTotal() {
 		return discountsTotal;
 	}

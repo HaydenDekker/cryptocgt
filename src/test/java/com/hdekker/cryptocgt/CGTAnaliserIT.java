@@ -43,12 +43,16 @@ public class CGTAnaliserIT {
 	AppConfig appConfig;
 	
 	private BufferedReader stubOrdersReader() {
+		
+		log.info(appConfig.getBuysSellsCSV());
 		return CSVUtils.openDocumentReader()
 				.apply(appConfig.getBuysSellsCSV())
 				.get();
 	}
 	
 	private BufferedReader stubSendReceivesReader() {
+		
+		log.info(appConfig.getSendsReceivesCSV());
 		return CSVUtils.openDocumentReader()
 				.apply(appConfig.getSendsReceivesCSV())
 				.get();

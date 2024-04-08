@@ -20,10 +20,12 @@ public class CoinspotDateTimeConverterTest {
 	@Test
 	public void convertsDateTime() {
 		//14/10/2022  4:26:00 PM
-		String timeString = "24/8/2021  22:43";
-				//"24/8/2021  10:43:00 PM"; 
+		//String timeString = "24/8/2021  22:43";
+		// "24/8/2021  10:43:00 PM"; 
+		// TODO date time is in AM PM when taken from coinspot directly.
+		String timeString = "21/12/2022  7:30:00 AM";
 		LocalDateTime conv = converter.convert(timeString);
-		assertThat(conv, equalTo(LocalDateTime.of(2021, 8, 24, 22, 43, 0, 0)));
+		assertThat(conv, equalTo(LocalDateTime.of(2022, 12, 21, 07, 30, 0, 0)));
 		
 	}
 	

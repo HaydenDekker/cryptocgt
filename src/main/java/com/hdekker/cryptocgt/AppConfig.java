@@ -1,16 +1,20 @@
 package com.hdekker.cryptocgt;
 
-import java.time.LocalDate;
-import java.time.MonthDay;
 import java.util.Calendar;
 
+import javax.annotation.PostConstruct;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Configuration
-@ConfigurationProperties(prefix = "cryptocgt.config")
+@ConfigurationProperties("cryptocgt.config")
 public class AppConfig {
+	
+	Logger log = LoggerFactory.getLogger(AppConfig.class);
 
 	String buysSellsCSV;
 	String sendsReceivesCSV;
@@ -53,6 +57,12 @@ public class AppConfig {
 		this.reportLocation = reportLocation;
 	}
 	
-	
+	@PostConstruct
+	public void log() {
+		
+		log.info(buysSellsCSV);
+		log.info(sendsReceivesCSV);
+		
+	}
 	
 }

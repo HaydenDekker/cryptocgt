@@ -8,8 +8,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class CoinspotDateTimeConverter {
 	
-	final static String coinSpotDateTimeFormat = "d[d]/M[M]/yyyy [ ]H[H]:mm[:ss]";
-			//"d[d]/M[M]/yyyy [ ]h[h]:mm[:ss][ a]";
+	final static String coinSpotDateTimeFormat = "d[d]/M[M]/yyyy [ ]h[h]:mm[:ss][ a]";
+			//"d[d]/M[M]/yyyy [ ]H[H]:mm[:ss]";
+			//;
 	
 	private DateTimeFormatter formatter;
 	

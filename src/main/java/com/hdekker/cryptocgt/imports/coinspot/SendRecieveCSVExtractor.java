@@ -52,12 +52,21 @@ public class SendRecieveCSVExtractor {
 				.parse(reader)
 				.stream()
 				.map(rec->{
+					
+					Double fee = 0.0;
+					
+					try {
+						fee = Double.valueOf(rec.get(SendReceiveColumns.EX_AUD_RATE));
+					}catch(Exception e){
+						fee = 0.0;
+					}
+					
 					SendRecieves srs = new SendRecieves(
 							rec.get(SendReceiveColumns.COIN), 
 							Double.valueOf(rec.get(SendReceiveColumns.AMOUNT)), 
 							dateTimeConverter.convert(rec.get(SendReceiveColumns.TRANSACTION_DATE)), 
-							TransactionType.valueOf(rec.get(SendReceiveColumns.TYPE)), 
-							Double.valueOf(rec.get(SendReceiveColumns.EX_AUD_RATE)));
+							TransactionType.valueOf(rec.get(SendReceiveColumns.TYPE)),
+							fee);
 					return srs;
 				})
 				.collect(Collectors.toList());

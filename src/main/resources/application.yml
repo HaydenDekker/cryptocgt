@@ -1,6 +1,6 @@
 cryptocgt:
   config:
-    buysSellsCSV: /Users/HDekker/Documents/2021/August 2021/Tax/orderhistory.csv
-    sendsReceivesCSV: /Users/HDekker/Documents/2021/August 2021/Tax/sendsreceives.csv
-    reportLocation: /Users/HDekker/Documents/2021/August 2021/Tax/cgt-crypto.csv
+    buysSellsCSV: /Users/Hayden Dekker/OneDrive/Professional/Tax/2023/Hayden/Crypto/orderhistory.csv
+    sendsReceivesCSV: /Users/Hayden Dekker/OneDrive/Professional/Tax/2023/Hayden/Crypto/sendsreceives.csv
+    reportLocation: /Users/Hayden Dekker/OneDrive/Professional/Tax/2023/Hayden/Crypto/report.csv
 

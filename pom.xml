@@ -74,8 +74,6 @@
 		    <artifactId>commons-csv</artifactId>
 		    <version>1.9.0</version>
 		</dependency>
-				
-
  
 	</dependencies>
 	
@@ -86,6 +84,15 @@
 		    <url>https://hayden-440654054855.d.codeartifact.ap-southeast-2.amazonaws.com/maven/crypto-cgt/</url>
 		  </repository>
 	</distributionManagement>
+	
+	<build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 
 
 </project>

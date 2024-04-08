@@ -12,6 +12,7 @@ public class CSVFormatter {
 				.create()
 				.setSkipHeaderRecord(true)
 				.setHeader(e)
+				.setNullString("")
 				.build();
 		
 		return format;

@@ -81,10 +81,17 @@ public class CGTReporter {
 					.map(es-> {
 						
 					 	List<CGTEvent> events = eventsByYear.get(es.getKey());
+					 	Double gains = events.stream()
+					 				.filter(e->e.getCgt()>0)
+					 				.map(e->e.getCgt())
+					 				.reduce((a,b)-> a + b)
+					 				.orElse(0.0);
+					 				
 					
 						return new CGTTaxReport(
 								es.getKey(), 
 								events, 
+								gains,
 								summCGT(events),
 								calculateDiscount(events));
 					})
